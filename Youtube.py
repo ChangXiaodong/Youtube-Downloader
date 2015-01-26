@@ -39,7 +39,18 @@ class Youtube(object):
 		entrys = [parse_qs(entry) for entry in url_encoded_fmt_stream_map]
 		url_maps = [dict(url=entry['url'][0], type=entry['type']) for entry in entrys]
 		return url_maps
+	def get_write_download_urls(self):
+		type = getFileType('mp4')
+		video_url_map=self.get_download_urls()
+		url = ''
 
+		for entry in video_url_map:
+			entry_type = entry['type'][0]
+			entry_type = entry_type.split(';')[0]
+			if entry_type.lower() == type.lower():
+				url = entry['url']
+				break
+		return url
 	def download_video(self):
 		type = getFileType('mp4')
 		video_url_map=self.get_download_urls()
@@ -139,6 +150,8 @@ def downloader(url, filename, prefix_message='^_^'):
 
 	time.sleep(1)
 	sys.stdout.write('\n')
+	sys.stdout.flush()
+	sys.stdout.write('Downloading Complete!\nEnjoy!')
 	sys.stdout.flush()
 	file.close()
 def main():
